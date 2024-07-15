@@ -1,0 +1,9 @@
+bug = {"Protura":"The Protura is a Bug", 
+      "Blattodea": "The Blattodea is a Cockroach"}
+
+
+async def getBug(ctx):
+  bugAsk = input()
+  if statment determines the bug in the thing.
+  definitionBug =  "Take Item from Dictionary" 
+await ctx.send(f"Definition: {definition_bug}")
