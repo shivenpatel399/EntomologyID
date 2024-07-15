@@ -1,0 +1,244 @@
+import interactions
+from interactions.models.internal.context import SlashContext
+from interactions import SlashContext, OptionType, slash_option
+import discord
+import random
+import os
+from interactions import Client, Intents
+from interactions.ext import prefixed_commands
+from interactions.ext.prefixed_commands import prefixed_command, PrefixedContext
+from discord.ext import commands
+from discord import app_commands
+from discord.ext import commands, tasks
+from keep_alive import keep_alive
+
+intents = discord.Intents.default()
+intents.presences = True
+intents.members = True
+
+keep_alive()
+
+my_secret = os.environ['botToken']
+BOT_TOKEN = my_secret
+CHANNEL_ID = 1250160769400569948
+
+bot = commands.Bot(command_prefix="b.",intents=discord.Intents.all())
+
+Bug = {
+    "Protura" : ["Bug/Protura-1.jpeg","Bug/Protura-2.jpeg","Bug/Protura-3.jpeg","Bug/Protura-4.jpeg","Bug/Protura-5.jpeg","Bug/Protura-6.jpeg","Bug/Protura-7.jpeg","Bug/Protura-8.jpeg","Bug/Protura-9.jpeg","Bug/Protura-0.jpeg"],
+    "Collembola" : ["Bug/Collembola-1.jpeg","Bug/Collembola-2.jpeg","Bug/Collembola-3.jpeg","Bug/Collembola-4.jpeg","Bug/Collembola-5.jpeg","Bug/Collembola-6.jpeg","Bug/Collembola-7.jpeg","Bug/Collembola-8.jpeg","Bug/Collembola-9.jpeg","Bug/Collembola-0.jpeg"],
+    "Diplura" : ["Bug/Diplura-1.jpeg","Bug/Diplura-2.jpeg","Bug/Diplura-3.jpeg","Bug/Diplura-4.jpeg","Bug/Diplura-5.jpeg","Bug/Diplura-6.jpeg","Bug/Diplura-7.jpeg","Bug/Diplura-8.jpeg","Bug/Diplura-9.jpeg","Bug/Diplura-0.jpeg"],
+    "Thysanura" : ["Bug/Thysanura-1.jpeg","Bug/Thysanura-2.jpeg","Bug/Thysanura-3.jpeg","Bug/Thysanura-4.jpeg","Bug/Thysanura-5.jpeg","Bug/Thysanura-6.jpeg","Bug/Thysanura-7.jpeg","Bug/Thysanura-8.jpeg","Bug/Thysanura-9.jpeg","Bug/Thysanura-0.jpeg"],
+    "Ephemeroptera" : ["Bug/Ephemeroptera-1.jpeg","Bug/Ephemeroptera-2.jpeg","Bug/Ephemeroptera-3.jpeg","Bug/Ephemeroptera-4.jpeg","Bug/Ephemeroptera-5.jpeg","Bug/Ephemeroptera-6.jpeg","Bug/Ephemeroptera-7.jpeg","Bug/Ephemeroptera-8.jpeg","Bug/Ephemeroptera-9.jpeg","Bug/Ephemeroptera-0.jpeg"],
+    "Odonata" : ["Bug/Odonata-1.jpeg","Bug/Odonata-2.jpeg","Bug/Odonata-3.jpeg","Bug/Odonata-4.jpeg","Bug/Odonata-5.jpeg","Bug/Odonata-6.jpeg","Bug/Odonata-7.jpeg","Bug/Odonata-8.jpeg","Bug/Odonata-9.jpeg","Bug/Odonata-0.jpeg"],
+    "Aeschnidae" : ["Bug/Aeschnidae-1.jpeg","Bug/Aeschnidae-2.jpeg","Bug/Aeschnidae-3.jpeg","Bug/Aeschnidae-4.jpeg","Bug/Aeschnidae-5.jpeg","Bug/Aeschnidae-6.jpeg","Bug/Aeschnidae-7.jpeg","Bug/Aeschnidae-8.jpeg","Bug/Aeschnidae-9.jpeg","Bug/Aeschnidae-0.jpeg"],
+    "Gomphidae" : ["Bug/Gomphidae-1.jpeg","Bug/Gomphidae-2.jpeg","Bug/Gomphidae-3.jpeg","Bug/Gomphidae-4.jpeg","Bug/Gomphidae-5.jpeg","Bug/Gomphidae-6.jpeg","Bug/Gomphidae-7.jpeg","Bug/Gomphidae-8.jpeg","Bug/Gomphidae-9.jpeg","Bug/Gomphidae-0.jpeg"],
+    "Libellulidae" : ["Bug/Libellulidae-1.jpeg","Bug/Libellulidae-2.jpeg","Bug/Libellulidae-3.jpeg","Bug/Libellulidae-4.jpeg","Bug/Libellulidae-5.jpeg","Bug/Libellulidae-6.jpeg","Bug/Libellulidae-7.jpeg","Bug/Libellulidae-8.jpeg","Bug/Libellulidae-9.jpeg","Bug/Libellulidae-0.jpeg"],
+    "Lestidae" : ["Bug/Lestidae-1.jpeg","Bug/Lestidae-2.jpeg","Bug/Lestidae-3.jpeg","Bug/Lestidae-4.jpeg","Bug/Lestidae-5.jpeg","Bug/Lestidae-6.jpeg","Bug/Lestidae-7.jpeg","Bug/Lestidae-8.jpeg","Bug/Lestidae-9.jpeg","Bug/Lestidae-0.jpeg"],
+    "Coenagrionidae" : ["Bug/Coenagrionidae-1.jpeg","Bug/Coenagrionidae-2.jpeg","Bug/Coenagrionidae-3.jpeg","Bug/Coenagrionidae-4.jpeg","Bug/Coenagrionidae-5.jpeg","Bug/Coenagrionidae-6.jpeg","Bug/Coenagrionidae-7.jpeg","Bug/Coenagrionidae-8.jpeg","Bug/Coenagrionidae-9.jpeg","Bug/Coenagrionidae-0.jpeg"],
+    "Blattodea" : ["Bug/Blattodea-1.jpeg","Bug/Blattodea-2.jpeg","Bug/Blattodea-3.jpeg","Bug/Blattodea-4.jpeg","Bug/Blattodea-5.jpeg","Bug/Blattodea-6.jpeg","Bug/Blattodea-7.jpeg","Bug/Blattodea-8.jpeg","Bug/Blattodea-9.jpeg","Bug/Blattodea-0.jpeg"],
+    "Mantodea" : ["Bug/Mantodea-1.jpeg","Bug/Mantodea-2.jpeg","Bug/Mantodea-3.jpeg","Bug/Mantodea-4.jpeg","Bug/Mantodea-5.jpeg","Bug/Mantodea-6.jpeg","Bug/Mantodea-7.jpeg","Bug/Mantodea-8.jpeg","Bug/Mantodea-9.jpeg","Bug/Mantodea-0.jpeg"],
+    "Isoptera" : ["Bug/Isoptera-1.jpeg","Bug/Isoptera-2.jpeg","Bug/Isoptera-3.jpeg","Bug/Isoptera-4.jpeg","Bug/Isoptera-5.jpeg","Bug/Isoptera-6.jpeg","Bug/Isoptera-7.jpeg","Bug/Isoptera-8.jpeg","Bug/Isoptera-9.jpeg","Bug/Isoptera-0.jpeg"],
+    "Grylloblattodea" : ["Bug/Grylloblattodea-1.jpeg","Bug/Grylloblattodea-2.jpeg","Bug/Grylloblattodea-3.jpeg","Bug/Grylloblattodea-4.jpeg","Bug/Grylloblattodea-5.jpeg","Bug/Grylloblattodea-6.jpeg","Bug/Grylloblattodea-7.jpeg","Bug/Grylloblattodea-8.jpeg","Bug/Grylloblattodea-9.jpeg","Bug/Grylloblattodea-0.jpeg"],
+    "Dermaptera" : ["Bug/Dermaptera-1.jpeg","Bug/Dermaptera-2.jpeg","Bug/Dermaptera-3.jpeg","Bug/Dermaptera-4.jpeg","Bug/Dermaptera-5.jpeg","Bug/Dermaptera-6.jpeg","Bug/Dermaptera-7.jpeg","Bug/Dermaptera-8.jpeg","Bug/Dermaptera-9.jpeg","Bug/Dermaptera-0.jpeg"],
+    "Plecoptera" : ["Bug/Plecoptera-1.jpeg","Bug/Plecoptera-2.jpeg","Bug/Plecoptera-3.jpeg","Bug/Plecoptera-4.jpeg","Bug/Plecoptera-5.jpeg","Bug/Plecoptera-6.jpeg","Bug/Plecoptera-7.jpeg","Bug/Plecoptera-8.jpeg","Bug/Plecoptera-9.jpeg","Bug/Plecoptera-0.jpeg"],
+    "Orthoptera" : ["Bug/Orthoptera-1.jpeg","Bug/Orthoptera-2.jpeg","Bug/Orthoptera-3.jpeg","Bug/Orthoptera-4.jpeg","Bug/Orthoptera-5.jpeg","Bug/Orthoptera-6.jpeg","Bug/Orthoptera-7.jpeg","Bug/Orthoptera-8.jpeg","Bug/Orthoptera-9.jpeg","Bug/Orthoptera-0.jpeg"],
+    "Tetrigidae" : ["Bug/Tetrigidae-1.jpeg","Bug/Tetrigidae-2.jpeg","Bug/Tetrigidae-3.jpeg","Bug/Tetrigidae-4.jpeg","Bug/Tetrigidae-5.jpeg","Bug/Tetrigidae-6.jpeg","Bug/Tetrigidae-7.jpeg","Bug/Tetrigidae-8.jpeg","Bug/Tetrigidae-9.jpeg","Bug/Tetrigidae-0.jpeg"],
+    "Acrididae" : ["Bug/Acrididae-1.jpeg","Bug/Acrididae-2.jpeg","Bug/Acrididae-3.jpeg","Bug/Acrididae-4.jpeg","Bug/Acrididae-5.jpeg","Bug/Acrididae-6.jpeg","Bug/Acrididae-7.jpeg","Bug/Acrididae-8.jpeg","Bug/Acrididae-9.jpeg","Bug/Acrididae-0.jpeg"],
+    "Tettigoniidae" : ["Bug/Tettigoniidae-1.jpeg","Bug/Tettigoniidae-2.jpeg","Bug/Tettigoniidae-3.jpeg","Bug/Tettigoniidae-4.jpeg","Bug/Tettigoniidae-5.jpeg","Bug/Tettigoniidae-6.jpeg","Bug/Tettigoniidae-7.jpeg","Bug/Tettigoniidae-8.jpeg","Bug/Tettigoniidae-9.jpeg","Bug/Tettigoniidae-0.jpeg"],
+    "Gryllacrididae" : ["Bug/Gryllacrididae-1.jpeg","Bug/Gryllacrididae-2.jpeg","Bug/Gryllacrididae-3.jpeg","Bug/Gryllacrididae-4.jpeg","Bug/Gryllacrididae-5.jpeg","Bug/Gryllacrididae-6.jpeg","Bug/Gryllacrididae-7.jpeg","Bug/Gryllacrididae-8.jpeg","Bug/Gryllacrididae-9.jpeg","Bug/Gryllacrididae-0.jpeg"],
+    "Gryllidae" : ["Bug/Gryllidae-1.jpeg","Bug/Gryllidae-2.jpeg","Bug/Gryllidae-3.jpeg","Bug/Gryllidae-4.jpeg","Bug/Gryllidae-5.jpeg","Bug/Gryllidae-6.jpeg","Bug/Gryllidae-7.jpeg","Bug/Gryllidae-8.jpeg","Bug/Gryllidae-9.jpeg","Bug/Gryllidae-0.jpeg"],
+    "Gryllotalpidae" : ["Bug/Gryllotalpidae-1.jpeg","Bug/Gryllotalpidae-2.jpeg","Bug/Gryllotalpidae-3.jpeg","Bug/Gryllotalpidae-4.jpeg","Bug/Gryllotalpidae-5.jpeg","Bug/Gryllotalpidae-6.jpeg","Bug/Gryllotalpidae-7.jpeg","Bug/Gryllotalpidae-8.jpeg","Bug/Gryllotalpidae-9.jpeg","Bug/Gryllotalpidae-0.jpeg"],
+    "Phasmatodea" : ["Bug/Phasmatodea-1.jpeg","Bug/Phasmatodea-2.jpeg","Bug/Phasmatodea-3.jpeg","Bug/Phasmatodea-4.jpeg","Bug/Phasmatodea-5.jpeg","Bug/Phasmatodea-6.jpeg","Bug/Phasmatodea-7.jpeg","Bug/Phasmatodea-8.jpeg","Bug/Phasmatodea-9.jpeg","Bug/Phasmatodea-0.jpeg"],
+    "Psocoptera" : ["Bug/Psocoptera-1.jpeg","Bug/Psocoptera-2.jpeg","Bug/Psocoptera-3.jpeg","Bug/Psocoptera-4.jpeg","Bug/Psocoptera-5.jpeg","Bug/Psocoptera-6.jpeg","Bug/Psocoptera-7.jpeg","Bug/Psocoptera-8.jpeg","Bug/Psocoptera-9.jpeg","Bug/Psocoptera-0.jpeg"],
+    "Mallophaga" : ["Bug/Mallophaga-1.jpeg","Bug/Mallophaga-2.jpeg","Bug/Mallophaga-3.jpeg","Bug/Mallophaga-4.jpeg","Bug/Mallophaga-5.jpeg","Bug/Mallophaga-6.jpeg","Bug/Mallophaga-7.jpeg","Bug/Mallophaga-8.jpeg","Bug/Mallophaga-9.jpeg","Bug/Mallophaga-0.jpeg"],
+    "Anoplura" : ["Bug/Anoplura-1.jpeg","Bug/Anoplura-2.jpeg","Bug/Anoplura-3.jpeg","Bug/Anoplura-4.jpeg","Bug/Anoplura-5.jpeg","Bug/Anoplura-6.jpeg","Bug/Anoplura-7.jpeg","Bug/Anoplura-8.jpeg","Bug/Anoplura-9.jpeg","Bug/Anoplura-0.jpeg"],
+    "Hemiptera" : ["Bug/Hemiptera-1.jpeg","Bug/Hemiptera-2.jpeg","Bug/Hemiptera-3.jpeg","Bug/Hemiptera-4.jpeg","Bug/Hemiptera-5.jpeg","Bug/Hemiptera-6.jpeg","Bug/Hemiptera-7.jpeg","Bug/Hemiptera-8.jpeg","Bug/Hemiptera-9.jpeg","Bug/Hemiptera-0.jpeg"],
+    "Corixidae" : ["Bug/Corixidae-1.jpeg","Bug/Corixidae-2.jpeg","Bug/Corixidae-3.jpeg","Bug/Corixidae-4.jpeg","Bug/Corixidae-5.jpeg","Bug/Corixidae-6.jpeg","Bug/Corixidae-7.jpeg","Bug/Corixidae-8.jpeg","Bug/Corixidae-9.jpeg","Bug/Corixidae-0.jpeg"],
+    "Notonectidae" : ["Bug/Notonectidae-1.jpeg","Bug/Notonectidae-2.jpeg","Bug/Notonectidae-3.jpeg","Bug/Notonectidae-4.jpeg","Bug/Notonectidae-5.jpeg","Bug/Notonectidae-6.jpeg","Bug/Notonectidae-7.jpeg","Bug/Notonectidae-8.jpeg","Bug/Notonectidae-9.jpeg","Bug/Notonectidae-0.jpeg"],
+    "Belostomatidae" : ["Bug/Belostomatidae-1.jpeg","Bug/Belostomatidae-2.jpeg","Bug/Belostomatidae-3.jpeg","Bug/Belostomatidae-4.jpeg","Bug/Belostomatidae-5.jpeg","Bug/Belostomatidae-6.jpeg","Bug/Belostomatidae-7.jpeg","Bug/Belostomatidae-8.jpeg","Bug/Belostomatidae-9.jpeg","Bug/Belostomatidae-0.jpeg"],
+    "Nepidae" : ["Bug/Nepidae-1.jpeg","Bug/Nepidae-2.jpeg","Bug/Nepidae-3.jpeg","Bug/Nepidae-4.jpeg","Bug/Nepidae-5.jpeg","Bug/Nepidae-6.jpeg","Bug/Nepidae-7.jpeg","Bug/Nepidae-8.jpeg","Bug/Nepidae-9.jpeg","Bug/Nepidae-0.jpeg"],
+    "Gelastocoridae" : ["Bug/Gelastocoridae-1.jpeg","Bug/Gelastocoridae-2.jpeg","Bug/Gelastocoridae-3.jpeg","Bug/Gelastocoridae-4.jpeg","Bug/Gelastocoridae-5.jpeg","Bug/Gelastocoridae-6.jpeg","Bug/Gelastocoridae-7.jpeg","Bug/Gelastocoridae-8.jpeg","Bug/Gelastocoridae-9.jpeg","Bug/Gelastocoridae-0.jpeg"],
+    "Thysanoptera" : ["Bug/Thysanoptera-1.jpeg","Bug/Thysanoptera-2.jpeg","Bug/Thysanoptera-3.jpeg","Bug/Thysanoptera-4.jpeg","Bug/Thysanoptera-5.jpeg","Bug/Thysanoptera-6.jpeg","Bug/Thysanoptera-7.jpeg","Bug/Thysanoptera-8.jpeg","Bug/Thysanoptera-9.jpeg","Bug/Thysanoptera-0.jpeg"],
+    "Diptera" : ["Bug/Diptera-1.jpeg","Bug/Diptera-2.jpeg","Bug/Diptera-3.jpeg","Bug/Diptera-4.jpeg","Bug/Diptera-5.jpeg","Bug/Diptera-6.jpeg","Bug/Diptera-7.jpeg","Bug/Diptera-8.jpeg","Bug/Diptera-9.jpeg","Bug/Diptera-0.jpeg"],
+    "Tipulidae" : ["Bug/Tipulidae-1.jpeg","Bug/Tipulidae-2.jpeg","Bug/Tipulidae-3.jpeg","Bug/Tipulidae-4.jpeg","Bug/Tipulidae-5.jpeg","Bug/Tipulidae-6.jpeg","Bug/Tipulidae-7.jpeg","Bug/Tipulidae-8.jpeg","Bug/Tipulidae-9.jpeg","Bug/Tipulidae-0.jpeg"],
+    "Culicidae" : ["Bug/Culicidae-1.jpeg","Bug/Culicidae-2.jpeg","Bug/Culicidae-3.jpeg","Bug/Culicidae-4.jpeg","Bug/Culicidae-5.jpeg","Bug/Culicidae-6.jpeg","Bug/Culicidae-7.jpeg","Bug/Culicidae-8.jpeg","Bug/Culicidae-9.jpeg","Bug/Culicidae-0.jpeg"],
+    "Chironomidae" : ["Bug/Chironomidae-1.jpeg","Bug/Chironomidae-2.jpeg","Bug/Chironomidae-3.jpeg","Bug/Chironomidae-4.jpeg","Bug/Chironomidae-5.jpeg","Bug/Chironomidae-6.jpeg","Bug/Chironomidae-7.jpeg","Bug/Chironomidae-8.jpeg","Bug/Chironomidae-9.jpeg","Bug/Chironomidae-0.jpeg"],
+    "Simuliidae" : ["Bug/Simuliidae-1.jpeg","Bug/Simuliidae-2.jpeg","Bug/Simuliidae-3.jpeg","Bug/Simuliidae-4.jpeg","Bug/Simuliidae-5.jpeg","Bug/Simuliidae-6.jpeg","Bug/Simuliidae-7.jpeg","Bug/Simuliidae-8.jpeg","Bug/Simuliidae-9.jpeg","Bug/Simuliidae-0.jpeg"],
+    "Stratiomyidae" : ["Bug/Stratiomyidae-1.jpeg","Bug/Stratiomyidae-2.jpeg","Bug/Stratiomyidae-3.jpeg","Bug/Stratiomyidae-4.jpeg","Bug/Stratiomyidae-5.jpeg","Bug/Stratiomyidae-6.jpeg","Bug/Stratiomyidae-7.jpeg","Bug/Stratiomyidae-8.jpeg","Bug/Stratiomyidae-9.jpeg","Bug/Stratiomyidae-0.jpeg"],
+    "Tabanidae" : ["Bug/Tabanidae-1.jpeg","Bug/Tabanidae-2.jpeg","Bug/Tabanidae-3.jpeg","Bug/Tabanidae-4.jpeg","Bug/Tabanidae-5.jpeg","Bug/Tabanidae-6.jpeg","Bug/Tabanidae-7.jpeg","Bug/Tabanidae-8.jpeg","Bug/Tabanidae-9.jpeg","Bug/Tabanidae-0.jpeg"],
+    "Asilidae" : ["Bug/Asilidae-1.jpeg","Bug/Asilidae-2.jpeg","Bug/Asilidae-3.jpeg","Bug/Asilidae-4.jpeg","Bug/Asilidae-5.jpeg","Bug/Asilidae-6.jpeg","Bug/Asilidae-7.jpeg","Bug/Asilidae-8.jpeg","Bug/Asilidae-9.jpeg","Bug/Asilidae-0.jpeg"],
+    "Bombyliidae" : ["Bug/Bombyliidae-1.jpeg","Bug/Bombyliidae-2.jpeg","Bug/Bombyliidae-3.jpeg","Bug/Bombyliidae-4.jpeg","Bug/Bombyliidae-5.jpeg","Bug/Bombyliidae-6.jpeg","Bug/Bombyliidae-7.jpeg","Bug/Bombyliidae-8.jpeg","Bug/Bombyliidae-9.jpeg","Bug/Bombyliidae-0.jpeg"],
+    "Syrphidae" : ["Bug/Syrphidae-1.jpeg","Bug/Syrphidae-2.jpeg","Bug/Syrphidae-3.jpeg","Bug/Syrphidae-4.jpeg","Bug/Syrphidae-5.jpeg","Bug/Syrphidae-6.jpeg","Bug/Syrphidae-7.jpeg","Bug/Syrphidae-8.jpeg","Bug/Syrphidae-9.jpeg","Bug/Syrphidae-0.jpeg"],
+    "Tephritidae" : ["Bug/Tephritidae-1.jpeg","Bug/Tephritidae-2.jpeg","Bug/Tephritidae-3.jpeg","Bug/Tephritidae-4.jpeg","Bug/Tephritidae-5.jpeg","Bug/Tephritidae-6.jpeg","Bug/Tephritidae-7.jpeg","Bug/Tephritidae-8.jpeg","Bug/Tephritidae-9.jpeg","Bug/Tephritidae-0.jpeg"],
+    "Drosophilidae" : ["Bug/Drosophilidae-1.jpeg","Bug/Drosophilidae-2.jpeg","Bug/Drosophilidae-3.jpeg","Bug/Drosophilidae-4.jpeg","Bug/Drosophilidae-5.jpeg","Bug/Drosophilidae-6.jpeg","Bug/Drosophilidae-7.jpeg","Bug/Drosophilidae-8.jpeg","Bug/Drosophilidae-9.jpeg","Bug/Drosophilidae-0.jpeg"],
+    "Megachilidae" : ["Bug/Megachilidae-1.jpeg","Bug/Megachilidae-2.jpeg","Bug/Megachilidae-3.jpeg","Bug/Megachilidae-4.jpeg","Bug/Megachilidae-5.jpeg","Bug/Megachilidae-6.jpeg","Bug/Megachilidae-7.jpeg","Bug/Megachilidae-8.jpeg","Bug/Megachilidae-9.jpeg","Bug/Megachilidae-0.jpeg"],
+    "Apidae" : ["Bug/Apidae-1.jpeg","Bug/Apidae-2.jpeg","Bug/Apidae-3.jpeg","Bug/Apidae-4.jpeg","Bug/Apidae-5.jpeg","Bug/Apidae-6.jpeg","Bug/Apidae-7.jpeg","Bug/Apidae-8.jpeg","Bug/Apidae-9.jpeg","Bug/Apidae-0.jpeg"],
+    "Gerridae" : ["Bug/Gerridae-1.jpeg","Bug/Gerridae-2.jpeg","Bug/Gerridae-3.jpeg","Bug/Gerridae-4.jpeg","Bug/Gerridae-5.jpeg","Bug/Gerridae-6.jpeg","Bug/Gerridae-7.jpeg","Bug/Gerridae-8.jpeg","Bug/Gerridae-9.jpeg","Bug/Gerridae-0.jpeg"]
+}
+CorrectBug = {}
+WorkInProgress = {
+    "Cimicidae" : ["Bug/Cimicidae-1.jpeg","Bug/Cimicidae-2.jpeg","Bug/Cimicidae-3.jpeg","Bug/Cimicidae-4.jpeg","Bug/Cimicidae-5.jpeg","Bug/Cimicidae-6.jpeg","Bug/Cimicidae-7.jpeg","Bug/Cimicidae-8.jpeg","Bug/Cimicidae-9.jpeg","Bug/Cimicidae-0.jpeg"],
+    "Miridae" : ["Bug/Miridae-1.jpeg","Bug/Miridae-2.jpeg","Bug/Miridae-3.jpeg","Bug/Miridae-4.jpeg","Bug/Miridae-5.jpeg","Bug/Miridae-6.jpeg","Bug/Miridae-7.jpeg","Bug/Miridae-8.jpeg","Bug/Miridae-9.jpeg","Bug/Miridae-0.jpeg"],
+    "Reduviidae" : ["Bug/Reduviidae-1.jpeg","Bug/Reduviidae-2.jpeg","Bug/Reduviidae-3.jpeg","Bug/Reduviidae-4.jpeg","Bug/Reduviidae-5.jpeg","Bug/Reduviidae-6.jpeg","Bug/Reduviidae-7.jpeg","Bug/Reduviidae-8.jpeg","Bug/Reduviidae-9.jpeg","Bug/Reduviidae-0.jpeg"],
+    "Phymatidae" : ["Bug/Phymatidae-1.jpeg","Bug/Phymatidae-2.jpeg","Bug/Phymatidae-3.jpeg","Bug/Phymatidae-4.jpeg","Bug/Phymatidae-5.jpeg","Bug/Phymatidae-6.jpeg","Bug/Phymatidae-7.jpeg","Bug/Phymatidae-8.jpeg","Bug/Phymatidae-9.jpeg","Bug/Phymatidae-0.jpeg"],
+    "Tingidae" : ["Bug/Tingidae-1.jpeg","Bug/Tingidae-2.jpeg","Bug/Tingidae-3.jpeg","Bug/Tingidae-4.jpeg","Bug/Tingidae-5.jpeg","Bug/Tingidae-6.jpeg","Bug/Tingidae-7.jpeg","Bug/Tingidae-8.jpeg","Bug/Tingidae-9.jpeg","Bug/Tingidae-0.jpeg"],
+    "Lygaeidae" : ["Bug/Lygaeidae-1.jpeg","Bug/Lygaeidae-2.jpeg","Bug/Lygaeidae-3.jpeg","Bug/Lygaeidae-4.jpeg","Bug/Lygaeidae-5.jpeg","Bug/Lygaeidae-6.jpeg","Bug/Lygaeidae-7.jpeg","Bug/Lygaeidae-8.jpeg","Bug/Lygaeidae-9.jpeg","Bug/Lygaeidae-0.jpeg"],
+    "Coreidae" : ["Bug/Coreidae-1.jpeg","Bug/Coreidae-2.jpeg","Bug/Coreidae-3.jpeg","Bug/Coreidae-4.jpeg","Bug/Coreidae-5.jpeg","Bug/Coreidae-6.jpeg","Bug/Coreidae-7.jpeg","Bug/Coreidae-8.jpeg","Bug/Coreidae-9.jpeg","Bug/Coreidae-0.jpeg"],
+    "Pentatomidae" : ["Bug/Pentatomidae-1.jpeg","Bug/Pentatomidae-2.jpeg","Bug/Pentatomidae-3.jpeg","Bug/Pentatomidae-4.jpeg","Bug/Pentatomidae-5.jpeg","Bug/Pentatomidae-6.jpeg","Bug/Pentatomidae-7.jpeg","Bug/Pentatomidae-8.jpeg","Bug/Pentatomidae-9.jpeg","Bug/Pentatomidae-0.jpeg"],
+    "Homoptera" : ["Bug/Homoptera-1.jpeg","Bug/Homoptera-2.jpeg","Bug/Homoptera-3.jpeg","Bug/Homoptera-4.jpeg","Bug/Homoptera-5.jpeg","Bug/Homoptera-6.jpeg","Bug/Homoptera-7.jpeg","Bug/Homoptera-8.jpeg","Bug/Homoptera-9.jpeg","Bug/Homoptera-0.jpeg"],
+    "Cicadidae" : ["Bug/Cicadidae-1.jpeg","Bug/Cicadidae-2.jpeg","Bug/Cicadidae-3.jpeg","Bug/Cicadidae-4.jpeg","Bug/Cicadidae-5.jpeg","Bug/Cicadidae-6.jpeg","Bug/Cicadidae-7.jpeg","Bug/Cicadidae-8.jpeg","Bug/Cicadidae-9.jpeg","Bug/Cicadidae-0.jpeg"],
+    "Membracidae" : ["Bug/Membracidae-1.jpeg","Bug/Membracidae-2.jpeg","Bug/Membracidae-3.jpeg","Bug/Membracidae-4.jpeg","Bug/Membracidae-5.jpeg","Bug/Membracidae-6.jpeg","Bug/Membracidae-7.jpeg","Bug/Membracidae-8.jpeg","Bug/Membracidae-9.jpeg","Bug/Membracidae-0.jpeg"],
+    "Cercopidae" : ["Bug/Cercopidae-1.jpeg","Bug/Cercopidae-2.jpeg","Bug/Cercopidae-3.jpeg","Bug/Cercopidae-4.jpeg","Bug/Cercopidae-5.jpeg","Bug/Cercopidae-6.jpeg","Bug/Cercopidae-7.jpeg","Bug/Cercopidae-8.jpeg","Bug/Cercopidae-9.jpeg","Bug/Cercopidae-0.jpeg"],
+    "Cicadellidae" : ["Bug/Cicadellidae-1.jpeg","Bug/Cicadellidae-2.jpeg","Bug/Cicadellidae-3.jpeg","Bug/Cicadellidae-4.jpeg","Bug/Cicadellidae-5.jpeg","Bug/Cicadellidae-6.jpeg","Bug/Cicadellidae-7.jpeg","Bug/Cicadellidae-8.jpeg","Bug/Cicadellidae-9.jpeg","Bug/Cicadellidae-0.jpeg"],
+    "Fulgoridae" : ["Bug/Fulgoridae-1.jpeg","Bug/Fulgoridae-2.jpeg","Bug/Fulgoridae-3.jpeg","Bug/Fulgoridae-4.jpeg","Bug/Fulgoridae-5.jpeg","Bug/Fulgoridae-6.jpeg","Bug/Fulgoridae-7.jpeg","Bug/Fulgoridae-8.jpeg","Bug/Fulgoridae-9.jpeg","Bug/Fulgoridae-0.jpeg"],
+    "Aphididae" : ["Bug/Aphididae-1.jpeg","Bug/Aphididae-2.jpeg","Bug/Aphididae-3.jpeg","Bug/Aphididae-4.jpeg","Bug/Aphididae-5.jpeg","Bug/Aphididae-6.jpeg","Bug/Aphididae-7.jpeg","Bug/Aphididae-8.jpeg","Bug/Aphididae-9.jpeg","Bug/Aphididae-0.jpeg"],
+    "Dactylopiidae" : ["Bug/Dactylopiidae-1.jpeg","Bug/Dactylopiidae-2.jpeg","Bug/Dactylopiidae-3.jpeg","Bug/Dactylopiidae-4.jpeg","Bug/Dactylopiidae-5.jpeg","Bug/Dactylopiidae-6.jpeg","Bug/Dactylopiidae-7.jpeg","Bug/Dactylopiidae-8.jpeg","Bug/Dactylopiidae-9.jpeg","Bug/Dactylopiidae-0.jpeg"],
+    "Megaloptera" : ["Bug/Megaloptera-1.jpeg","Bug/Megaloptera-2.jpeg","Bug/Megaloptera-3.jpeg","Bug/Megaloptera-4.jpeg","Bug/Megaloptera-5.jpeg","Bug/Megaloptera-6.jpeg","Bug/Megaloptera-7.jpeg","Bug/Megaloptera-8.jpeg","Bug/Megaloptera-9.jpeg","Bug/Megaloptera-0.jpeg"],
+    "Neuroptera" : ["Bug/Neuroptera-1.jpeg","Bug/Neuroptera-2.jpeg","Bug/Neuroptera-3.jpeg","Bug/Neuroptera-4.jpeg","Bug/Neuroptera-5.jpeg","Bug/Neuroptera-6.jpeg","Bug/Neuroptera-7.jpeg","Bug/Neuroptera-8.jpeg","Bug/Neuroptera-9.jpeg","Bug/Neuroptera-0.jpeg"],
+    "Chrysopidae" : ["Bug/Chrysopidae-1.jpeg","Bug/Chrysopidae-2.jpeg","Bug/Chrysopidae-3.jpeg","Bug/Chrysopidae-4.jpeg","Bug/Chrysopidae-5.jpeg","Bug/Chrysopidae-6.jpeg","Bug/Chrysopidae-7.jpeg","Bug/Chrysopidae-8.jpeg","Bug/Chrysopidae-9.jpeg","Bug/Chrysopidae-0.jpeg"],
+    "Myrmeleontidae" : ["Bug/Myrmeleontidae-1.jpeg","Bug/Myrmeleontidae-2.jpeg","Bug/Myrmeleontidae-3.jpeg","Bug/Myrmeleontidae-4.jpeg","Bug/Myrmeleontidae-5.jpeg","Bug/Myrmeleontidae-6.jpeg","Bug/Myrmeleontidae-7.jpeg","Bug/Myrmeleontidae-8.jpeg","Bug/Myrmeleontidae-9.jpeg","Bug/Myrmeleontidae-0.jpeg"],
+    "Coleoptera" : ["Bug/Coleoptera-1.jpeg","Bug/Coleoptera-2.jpeg","Bug/Coleoptera-3.jpeg","Bug/Coleoptera-4.jpeg","Bug/Coleoptera-5.jpeg","Bug/Coleoptera-6.jpeg","Bug/Coleoptera-7.jpeg","Bug/Coleoptera-8.jpeg","Bug/Coleoptera-9.jpeg","Bug/Coleoptera-0.jpeg"],
+    "Cicindelidae" : ["Bug/Cicindelidae-1.jpeg","Bug/Cicindelidae-2.jpeg","Bug/Cicindelidae-3.jpeg","Bug/Cicindelidae-4.jpeg","Bug/Cicindelidae-5.jpeg","Bug/Cicindelidae-6.jpeg","Bug/Cicindelidae-7.jpeg","Bug/Cicindelidae-8.jpeg","Bug/Cicindelidae-9.jpeg","Bug/Cicindelidae-0.jpeg"],
+    "Carabidae" : ["Bug/Carabidae-1.jpeg","Bug/Carabidae-2.jpeg","Bug/Carabidae-3.jpeg","Bug/Carabidae-4.jpeg","Bug/Carabidae-5.jpeg","Bug/Carabidae-6.jpeg","Bug/Carabidae-7.jpeg","Bug/Carabidae-8.jpeg","Bug/Carabidae-9.jpeg","Bug/Carabidae-0.jpeg"],
+    "Dytiscidae" : ["Bug/Dytiscidae-1.jpeg","Bug/Dytiscidae-2.jpeg","Bug/Dytiscidae-3.jpeg","Bug/Dytiscidae-4.jpeg","Bug/Dytiscidae-5.jpeg","Bug/Dytiscidae-6.jpeg","Bug/Dytiscidae-7.jpeg","Bug/Dytiscidae-8.jpeg","Bug/Dytiscidae-9.jpeg","Bug/Dytiscidae-0.jpeg"],
+    "Gyrinidae" : ["Bug/Gyrinidae-1.jpeg","Bug/Gyrinidae-2.jpeg","Bug/Gyrinidae-3.jpeg","Bug/Gyrinidae-4.jpeg","Bug/Gyrinidae-5.jpeg","Bug/Gyrinidae-6.jpeg","Bug/Gyrinidae-7.jpeg","Bug/Gyrinidae-8.jpeg","Bug/Gyrinidae-9.jpeg","Bug/Gyrinidae-0.jpeg"],
+    "Hydrophilidae" : ["Bug/Hydrophilidae-1.jpeg","Bug/Hydrophilidae-2.jpeg","Bug/Hydrophilidae-3.jpeg","Bug/Hydrophilidae-4.jpeg","Bug/Hydrophilidae-5.jpeg","Bug/Hydrophilidae-6.jpeg","Bug/Hydrophilidae-7.jpeg","Bug/Hydrophilidae-8.jpeg","Bug/Hydrophilidae-9.jpeg","Bug/Hydrophilidae-0.jpeg"],
+    "Histeridae" : ["Bug/Histeridae-1.jpeg","Bug/Histeridae-2.jpeg","Bug/Histeridae-3.jpeg","Bug/Histeridae-4.jpeg","Bug/Histeridae-5.jpeg","Bug/Histeridae-6.jpeg","Bug/Histeridae-7.jpeg","Bug/Histeridae-8.jpeg","Bug/Histeridae-9.jpeg","Bug/Histeridae-0.jpeg"],
+    "Staphylinidae" : ["Bug/Staphylinidae-1.jpeg","Bug/Staphylinidae-2.jpeg","Bug/Staphylinidae-3.jpeg","Bug/Staphylinidae-4.jpeg","Bug/Staphylinidae-5.jpeg","Bug/Staphylinidae-6.jpeg","Bug/Staphylinidae-7.jpeg","Bug/Staphylinidae-8.jpeg","Bug/Staphylinidae-9.jpeg","Bug/Staphylinidae-0.jpeg"],
+    "Silphidae" : ["Bug/Silphidae-1.jpeg","Bug/Silphidae-2.jpeg","Bug/Silphidae-3.jpeg","Bug/Silphidae-4.jpeg","Bug/Silphidae-5.jpeg","Bug/Silphidae-6.jpeg","Bug/Silphidae-7.jpeg","Bug/Silphidae-8.jpeg","Bug/Silphidae-9.jpeg","Bug/Silphidae-0.jpeg"],
+    "Lucanidae" : ["Bug/Lucanidae-1.jpeg","Bug/Lucanidae-2.jpeg","Bug/Lucanidae-3.jpeg","Bug/Lucanidae-4.jpeg","Bug/Lucanidae-5.jpeg","Bug/Lucanidae-6.jpeg","Bug/Lucanidae-7.jpeg","Bug/Lucanidae-8.jpeg","Bug/Lucanidae-9.jpeg","Bug/Lucanidae-0.jpeg"],
+    "Passalidae" : ["Bug/Passalidae-1.jpeg","Bug/Passalidae-2.jpeg","Bug/Passalidae-3.jpeg","Bug/Passalidae-4.jpeg","Bug/Passalidae-5.jpeg","Bug/Passalidae-6.jpeg","Bug/Passalidae-7.jpeg","Bug/Passalidae-8.jpeg","Bug/Passalidae-9.jpeg","Bug/Passalidae-0.jpeg"],
+    "Scarabaeidae" : ["Bug/Scarabaeidae-1.jpeg","Bug/Scarabaeidae-2.jpeg","Bug/Scarabaeidae-3.jpeg","Bug/Scarabaeidae-4.jpeg","Bug/Scarabaeidae-5.jpeg","Bug/Scarabaeidae-6.jpeg","Bug/Scarabaeidae-7.jpeg","Bug/Scarabaeidae-8.jpeg","Bug/Scarabaeidae-9.jpeg","Bug/Scarabaeidae-0.jpeg"],
+    "Buprestidae" : ["Bug/Buprestidae-1.jpeg","Bug/Buprestidae-2.jpeg","Bug/Buprestidae-3.jpeg","Bug/Buprestidae-4.jpeg","Bug/Buprestidae-5.jpeg","Bug/Buprestidae-6.jpeg","Bug/Buprestidae-7.jpeg","Bug/Buprestidae-8.jpeg","Bug/Buprestidae-9.jpeg","Bug/Buprestidae-0.jpeg"],
+    "Elateridae" : ["Bug/Elateridae-1.jpeg","Bug/Elateridae-2.jpeg","Bug/Elateridae-3.jpeg","Bug/Elateridae-4.jpeg","Bug/Elateridae-5.jpeg","Bug/Elateridae-6.jpeg","Bug/Elateridae-7.jpeg","Bug/Elateridae-8.jpeg","Bug/Elateridae-9.jpeg","Bug/Elateridae-0.jpeg"],
+    "Lampyridae" : ["Bug/Lampyridae-1.jpeg","Bug/Lampyridae-2.jpeg","Bug/Lampyridae-3.jpeg","Bug/Lampyridae-4.jpeg","Bug/Lampyridae-5.jpeg","Bug/Lampyridae-6.jpeg","Bug/Lampyridae-7.jpeg","Bug/Lampyridae-8.jpeg","Bug/Lampyridae-9.jpeg","Bug/Lampyridae-0.jpeg"],
+    "Cantharidae" : ["Bug/Cantharidae-1.jpeg","Bug/Cantharidae-2.jpeg","Bug/Cantharidae-3.jpeg","Bug/Cantharidae-4.jpeg","Bug/Cantharidae-5.jpeg","Bug/Cantharidae-6.jpeg","Bug/Cantharidae-7.jpeg","Bug/Cantharidae-8.jpeg","Bug/Cantharidae-9.jpeg","Bug/Cantharidae-0.jpeg"],
+    "Lycidae" : ["Bug/Lycidae-1.jpeg","Bug/Lycidae-2.jpeg","Bug/Lycidae-3.jpeg","Bug/Lycidae-4.jpeg","Bug/Lycidae-5.jpeg","Bug/Lycidae-6.jpeg","Bug/Lycidae-7.jpeg","Bug/Lycidae-8.jpeg","Bug/Lycidae-9.jpeg","Bug/Lycidae-0.jpeg"],
+    "Cleridae" : ["Bug/Cleridae-1.jpeg","Bug/Cleridae-2.jpeg","Bug/Cleridae-3.jpeg","Bug/Cleridae-4.jpeg","Bug/Cleridae-5.jpeg","Bug/Cleridae-6.jpeg","Bug/Cleridae-7.jpeg","Bug/Cleridae-8.jpeg","Bug/Cleridae-9.jpeg","Bug/Cleridae-0.jpeg"],
+    "Coccinellidae" : ["Bug/Coccinellidae-1.jpeg","Bug/Coccinellidae-2.jpeg","Bug/Coccinellidae-3.jpeg","Bug/Coccinellidae-4.jpeg","Bug/Coccinellidae-5.jpeg","Bug/Coccinellidae-6.jpeg","Bug/Coccinellidae-7.jpeg","Bug/Coccinellidae-8.jpeg","Bug/Coccinellidae-9.jpeg","Bug/Coccinellidae-0.jpeg"],
+    "Tenebrionidae" : ["Bug/Tenebrionidae-1.jpeg","Bug/Tenebrionidae-2.jpeg","Bug/Tenebrionidae-3.jpeg","Bug/Tenebrionidae-4.jpeg","Bug/Tenebrionidae-5.jpeg","Bug/Tenebrionidae-6.jpeg","Bug/Tenebrionidae-7.jpeg","Bug/Tenebrionidae-8.jpeg","Bug/Tenebrionidae-9.jpeg","Bug/Tenebrionidae-0.jpeg"],
+    "Meloidae" : ["Bug/Meloidae-1.jpeg","Bug/Meloidae-2.jpeg","Bug/Meloidae-3.jpeg","Bug/Meloidae-4.jpeg","Bug/Meloidae-5.jpeg","Bug/Meloidae-6.jpeg","Bug/Meloidae-7.jpeg","Bug/Meloidae-8.jpeg","Bug/Meloidae-9.jpeg","Bug/Meloidae-0.jpeg"],
+    "Cerambycidae" : ["Bug/Cerambycidae-1.jpeg","Bug/Cerambycidae-2.jpeg","Bug/Cerambycidae-3.jpeg","Bug/Cerambycidae-4.jpeg","Bug/Cerambycidae-5.jpeg","Bug/Cerambycidae-6.jpeg","Bug/Cerambycidae-7.jpeg","Bug/Cerambycidae-8.jpeg","Bug/Cerambycidae-9.jpeg","Bug/Cerambycidae-0.jpeg"],
+    "Chrysomelidae" : ["Bug/Chrysomelidae-1.jpeg","Bug/Chrysomelidae-2.jpeg","Bug/Chrysomelidae-3.jpeg","Bug/Chrysomelidae-4.jpeg","Bug/Chrysomelidae-5.jpeg","Bug/Chrysomelidae-6.jpeg","Bug/Chrysomelidae-7.jpeg","Bug/Chrysomelidae-8.jpeg","Bug/Chrysomelidae-9.jpeg","Bug/Chrysomelidae-0.jpeg"],
+    "Curculionidae" : ["Bug/Curculionidae-1.jpeg","Bug/Curculionidae-2.jpeg","Bug/Curculionidae-3.jpeg","Bug/Curculionidae-4.jpeg","Bug/Curculionidae-5.jpeg","Bug/Curculionidae-6.jpeg","Bug/Curculionidae-7.jpeg","Bug/Curculionidae-8.jpeg","Bug/Curculionidae-9.jpeg","Bug/Curculionidae-0.jpeg"],
+    "Strepsiptera" : ["Bug/Strepsiptera-1.jpeg","Bug/Strepsiptera-2.jpeg","Bug/Strepsiptera-3.jpeg","Bug/Strepsiptera-4.jpeg","Bug/Strepsiptera-5.jpeg","Bug/Strepsiptera-6.jpeg","Bug/Strepsiptera-7.jpeg","Bug/Strepsiptera-8.jpeg","Bug/Strepsiptera-9.jpeg","Bug/Strepsiptera-0.jpeg"],
+    "Mecoptera" : ["Bug/Mecoptera-1.jpeg","Bug/Mecoptera-2.jpeg","Bug/Mecoptera-3.jpeg","Bug/Mecoptera-4.jpeg","Bug/Mecoptera-5.jpeg","Bug/Mecoptera-6.jpeg","Bug/Mecoptera-7.jpeg","Bug/Mecoptera-8.jpeg","Bug/Mecoptera-9.jpeg","Bug/Mecoptera-0.jpeg"],
+    "Boreidae" : ["Bug/Boreidae-1.jpeg","Bug/Boreidae-2.jpeg","Bug/Boreidae-3.jpeg","Bug/Boreidae-4.jpeg","Bug/Boreidae-5.jpeg","Bug/Boreidae-6.jpeg","Bug/Boreidae-7.jpeg","Bug/Boreidae-8.jpeg","Bug/Boreidae-9.jpeg","Bug/Boreidae-0.jpeg"],
+    "Panorpidae" : ["Bug/Panorpidae-1.jpeg","Bug/Panorpidae-2.jpeg","Bug/Panorpidae-3.jpeg","Bug/Panorpidae-4.jpeg","Bug/Panorpidae-5.jpeg","Bug/Panorpidae-6.jpeg","Bug/Panorpidae-7.jpeg","Bug/Panorpidae-8.jpeg","Bug/Panorpidae-9.jpeg","Bug/Panorpidae-0.jpeg"],
+    "Siphonaptera" : ["Bug/Siphonaptera-1.jpeg","Bug/Siphonaptera-2.jpeg","Bug/Siphonaptera-3.jpeg","Bug/Siphonaptera-4.jpeg","Bug/Siphonaptera-5.jpeg","Bug/Siphonaptera-6.jpeg","Bug/Siphonaptera-7.jpeg","Bug/Siphonaptera-8.jpeg","Bug/Siphonaptera-9.jpeg","Bug/Siphonaptera-0.jpeg"],
+    "Muscidae" : ["Bug/Muscidae-1.jpeg","Bug/Muscidae-2.jpeg","Bug/Muscidae-3.jpeg","Bug/Muscidae-4.jpeg","Bug/Muscidae-5.jpeg","Bug/Muscidae-6.jpeg","Bug/Muscidae-7.jpeg","Bug/Muscidae-8.jpeg","Bug/Muscidae-9.jpeg","Bug/Muscidae-0.jpeg"],
+    "Hippoboscidae" : ["Bug/Hippoboscidae-1.jpeg","Bug/Hippoboscidae-2.jpeg","Bug/Hippoboscidae-3.jpeg","Bug/Hippoboscidae-4.jpeg","Bug/Hippoboscidae-5.jpeg","Bug/Hippoboscidae-6.jpeg","Bug/Hippoboscidae-7.jpeg","Bug/Hippoboscidae-8.jpeg","Bug/Hippoboscidae-9.jpeg","Bug/Hippoboscidae-0.jpeg"],
+    "Calliphoridae" : ["Bug/Calliphoridae-1.jpeg","Bug/Calliphoridae-2.jpeg","Bug/Calliphoridae-3.jpeg","Bug/Calliphoridae-4.jpeg","Bug/Calliphoridae-5.jpeg","Bug/Calliphoridae-6.jpeg","Bug/Calliphoridae-7.jpeg","Bug/Calliphoridae-8.jpeg","Bug/Calliphoridae-9.jpeg","Bug/Calliphoridae-0.jpeg"],
+    "Tachinidae" : ["Bug/Tachinidae-1.jpeg","Bug/Tachinidae-2.jpeg","Bug/Tachinidae-3.jpeg","Bug/Tachinidae-4.jpeg","Bug/Tachinidae-5.jpeg","Bug/Tachinidae-6.jpeg","Bug/Tachinidae-7.jpeg","Bug/Tachinidae-8.jpeg","Bug/Tachinidae-9.jpeg","Bug/Tachinidae-0.jpeg"],
+    "Trichoptera" : ["Bug/Trichoptera-1.jpeg","Bug/Trichoptera-2.jpeg","Bug/Trichoptera-3.jpeg","Bug/Trichoptera-4.jpeg","Bug/Trichoptera-5.jpeg","Bug/Trichoptera-6.jpeg","Bug/Trichoptera-7.jpeg","Bug/Trichoptera-8.jpeg","Bug/Trichoptera-9.jpeg","Bug/Trichoptera-0.jpeg"],
+    "Lepidoptera" : ["Bug/Lepidoptera-1.jpeg","Bug/Lepidoptera-2.jpeg","Bug/Lepidoptera-3.jpeg","Bug/Lepidoptera-4.jpeg","Bug/Lepidoptera-5.jpeg","Bug/Lepidoptera-6.jpeg","Bug/Lepidoptera-7.jpeg","Bug/Lepidoptera-8.jpeg","Bug/Lepidoptera-9.jpeg","Bug/Lepidoptera-0.jpeg"],
+    "Sesiidae" : ["Bug/Sesiidae-1.jpeg","Bug/Sesiidae-2.jpeg","Bug/Sesiidae-3.jpeg","Bug/Sesiidae-4.jpeg","Bug/Sesiidae-5.jpeg","Bug/Sesiidae-6.jpeg","Bug/Sesiidae-7.jpeg","Bug/Sesiidae-8.jpeg","Bug/Sesiidae-9.jpeg","Bug/Sesiidae-0.jpeg"],
+    "Tortricidae" : ["Bug/Tortricidae-1.jpeg","Bug/Tortricidae-2.jpeg","Bug/Tortricidae-3.jpeg","Bug/Tortricidae-4.jpeg","Bug/Tortricidae-5.jpeg","Bug/Tortricidae-6.jpeg","Bug/Tortricidae-7.jpeg","Bug/Tortricidae-8.jpeg","Bug/Tortricidae-9.jpeg","Bug/Tortricidae-0.jpeg"],
+    "Hesperiidae" : ["Bug/Hesperiidae-1.jpeg","Bug/Hesperiidae-2.jpeg","Bug/Hesperiidae-3.jpeg","Bug/Hesperiidae-4.jpeg","Bug/Hesperiidae-5.jpeg","Bug/Hesperiidae-6.jpeg","Bug/Hesperiidae-7.jpeg","Bug/Hesperiidae-8.jpeg","Bug/Hesperiidae-9.jpeg","Bug/Hesperiidae-0.jpeg"],
+    "Papilionidae" : ["Bug/Papilionidae-1.jpeg","Bug/Papilionidae-2.jpeg","Bug/Papilionidae-3.jpeg","Bug/Papilionidae-4.jpeg","Bug/Papilionidae-5.jpeg","Bug/Papilionidae-6.jpeg","Bug/Papilionidae-7.jpeg","Bug/Papilionidae-8.jpeg","Bug/Papilionidae-9.jpeg","Bug/Papilionidae-0.jpeg"],
+    "Pieridae" : ["Bug/Pieridae-1.jpeg","Bug/Pieridae-2.jpeg","Bug/Pieridae-3.jpeg","Bug/Pieridae-4.jpeg","Bug/Pieridae-5.jpeg","Bug/Pieridae-6.jpeg","Bug/Pieridae-7.jpeg","Bug/Pieridae-8.jpeg","Bug/Pieridae-9.jpeg","Bug/Pieridae-0.jpeg"],
+    "Lycaenidae" : ["Bug/Lycaenidae-1.jpeg","Bug/Lycaenidae-2.jpeg","Bug/Lycaenidae-3.jpeg","Bug/Lycaenidae-4.jpeg","Bug/Lycaenidae-5.jpeg","Bug/Lycaenidae-6.jpeg","Bug/Lycaenidae-7.jpeg","Bug/Lycaenidae-8.jpeg","Bug/Lycaenidae-9.jpeg","Bug/Lycaenidae-0.jpeg"],
+    "Nymphalidae" : ["Bug/Nymphalidae-1.jpeg","Bug/Nymphalidae-2.jpeg","Bug/Nymphalidae-3.jpeg","Bug/Nymphalidae-4.jpeg","Bug/Nymphalidae-5.jpeg","Bug/Nymphalidae-6.jpeg","Bug/Nymphalidae-7.jpeg","Bug/Nymphalidae-8.jpeg","Bug/Nymphalidae-9.jpeg","Bug/Nymphalidae-0.jpeg"],
+    "Satyridae" : ["Bug/Satyridae-1.jpeg","Bug/Satyridae-2.jpeg","Bug/Satyridae-3.jpeg","Bug/Satyridae-4.jpeg","Bug/Satyridae-5.jpeg","Bug/Satyridae-6.jpeg","Bug/Satyridae-7.jpeg","Bug/Satyridae-8.jpeg","Bug/Satyridae-9.jpeg","Bug/Satyridae-0.jpeg"],
+    "Danaidae" : ["Bug/Danaidae-1.jpeg","Bug/Danaidae-2.jpeg","Bug/Danaidae-3.jpeg","Bug/Danaidae-4.jpeg","Bug/Danaidae-5.jpeg","Bug/Danaidae-6.jpeg","Bug/Danaidae-7.jpeg","Bug/Danaidae-8.jpeg","Bug/Danaidae-9.jpeg","Bug/Danaidae-0.jpeg"],
+    "Pyralidae" : ["Bug/Pyralidae-1.jpeg","Bug/Pyralidae-2.jpeg","Bug/Pyralidae-3.jpeg","Bug/Pyralidae-4.jpeg","Bug/Pyralidae-5.jpeg","Bug/Pyralidae-6.jpeg","Bug/Pyralidae-7.jpeg","Bug/Pyralidae-8.jpeg","Bug/Pyralidae-9.jpeg","Bug/Pyralidae-0.jpeg"],
+    "Saturniidae" : ["Bug/Saturniidae-1.jpeg","Bug/Saturniidae-2.jpeg","Bug/Saturniidae-3.jpeg","Bug/Saturniidae-4.jpeg","Bug/Saturniidae-5.jpeg","Bug/Saturniidae-6.jpeg","Bug/Saturniidae-7.jpeg","Bug/Saturniidae-8.jpeg","Bug/Saturniidae-9.jpeg","Bug/Saturniidae-0.jpeg"],
+    "Sphingidae" : ["Bug/Sphingidae-1.jpeg","Bug/Sphingidae-2.jpeg","Bug/Sphingidae-3.jpeg","Bug/Sphingidae-4.jpeg","Bug/Sphingidae-5.jpeg","Bug/Sphingidae-6.jpeg","Bug/Sphingidae-7.jpeg","Bug/Sphingidae-8.jpeg","Bug/Sphingidae-9.jpeg","Bug/Sphingidae-0.jpeg"],
+    "Arctiidae" : ["Bug/Arctiidae-1.jpeg","Bug/Arctiidae-2.jpeg","Bug/Arctiidae-3.jpeg","Bug/Arctiidae-4.jpeg","Bug/Arctiidae-5.jpeg","Bug/Arctiidae-6.jpeg","Bug/Arctiidae-7.jpeg","Bug/Arctiidae-8.jpeg","Bug/Arctiidae-9.jpeg","Bug/Arctiidae-0.jpeg"],
+    "Lymantriidae" : ["Bug/Lymantriidae-1.jpeg","Bug/Lymantriidae-2.jpeg","Bug/Lymantriidae-3.jpeg","Bug/Lymantriidae-4.jpeg","Bug/Lymantriidae-5.jpeg","Bug/Lymantriidae-6.jpeg","Bug/Lymantriidae-7.jpeg","Bug/Lymantriidae-8.jpeg","Bug/Lymantriidae-9.jpeg","Bug/Lymantriidae-0.jpeg"],
+    "Noctuidae" : ["Bug/Noctuidae-1.jpeg","Bug/Noctuidae-2.jpeg","Bug/Noctuidae-3.jpeg","Bug/Noctuidae-4.jpeg","Bug/Noctuidae-5.jpeg","Bug/Noctuidae-6.jpeg","Bug/Noctuidae-7.jpeg","Bug/Noctuidae-8.jpeg","Bug/Noctuidae-9.jpeg","Bug/Noctuidae-0.jpeg"],
+    "Hymenoptera" : ["Bug/Hymenoptera-1.jpeg","Bug/Hymenoptera-2.jpeg","Bug/Hymenoptera-3.jpeg","Bug/Hymenoptera-4.jpeg","Bug/Hymenoptera-5.jpeg","Bug/Hymenoptera-6.jpeg","Bug/Hymenoptera-7.jpeg","Bug/Hymenoptera-8.jpeg","Bug/Hymenoptera-9.jpeg","Bug/Hymenoptera-0.jpeg"],
+    "Tenthredinidae" : ["Bug/Tenthredinidae-1.jpeg","Bug/Tenthredinidae-2.jpeg","Bug/Tenthredinidae-3.jpeg","Bug/Tenthredinidae-4.jpeg","Bug/Tenthredinidae-5.jpeg","Bug/Tenthredinidae-6.jpeg","Bug/Tenthredinidae-7.jpeg","Bug/Tenthredinidae-8.jpeg","Bug/Tenthredinidae-9.jpeg","Bug/Tenthredinidae-0.jpeg"],
+    "Siricidae" : ["Bug/Siricidae-1.jpeg","Bug/Siricidae-2.jpeg","Bug/Siricidae-3.jpeg","Bug/Siricidae-4.jpeg","Bug/Siricidae-5.jpeg","Bug/Siricidae-6.jpeg","Bug/Siricidae-7.jpeg","Bug/Siricidae-8.jpeg","Bug/Siricidae-9.jpeg","Bug/Siricidae-0.jpeg"],
+    "Ichneumonidae" : ["Bug/Ichneumonidae-1.jpeg","Bug/Ichneumonidae-2.jpeg","Bug/Ichneumonidae-3.jpeg","Bug/Ichneumonidae-4.jpeg","Bug/Ichneumonidae-5.jpeg","Bug/Ichneumonidae-6.jpeg","Bug/Ichneumonidae-7.jpeg","Bug/Ichneumonidae-8.jpeg","Bug/Ichneumonidae-9.jpeg","Bug/Ichneumonidae-0.jpeg"],
+    "Cynipidae" : ["Bug/Cynipidae-1.jpeg","Bug/Cynipidae-2.jpeg","Bug/Cynipidae-3.jpeg","Bug/Cynipidae-4.jpeg","Bug/Cynipidae-5.jpeg","Bug/Cynipidae-6.jpeg","Bug/Cynipidae-7.jpeg","Bug/Cynipidae-8.jpeg","Bug/Cynipidae-9.jpeg","Bug/Cynipidae-0.jpeg"],
+    "Mutillidae" : ["Bug/Mutillidae-1.jpeg","Bug/Mutillidae-2.jpeg","Bug/Mutillidae-3.jpeg","Bug/Mutillidae-4.jpeg","Bug/Mutillidae-5.jpeg","Bug/Mutillidae-6.jpeg","Bug/Mutillidae-7.jpeg","Bug/Mutillidae-8.jpeg","Bug/Mutillidae-9.jpeg","Bug/Mutillidae-0.jpeg"],
+    "Formicidae" : ["Bug/Formicidae-1.jpeg","Bug/Formicidae-2.jpeg","Bug/Formicidae-3.jpeg","Bug/Formicidae-4.jpeg","Bug/Formicidae-5.jpeg","Bug/Formicidae-6.jpeg","Bug/Formicidae-7.jpeg","Bug/Formicidae-8.jpeg","Bug/Formicidae-9.jpeg","Bug/Formicidae-0.jpeg"],
+    "Vespidae" : ["Bug/Vespidae-1.jpeg","Bug/Vespidae-2.jpeg","Bug/Vespidae-3.jpeg","Bug/Vespidae-4.jpeg","Bug/Vespidae-5.jpeg","Bug/Vespidae-6.jpeg","Bug/Vespidae-7.jpeg","Bug/Vespidae-8.jpeg","Bug/Vespidae-9.jpeg","Bug/Vespidae-0.jpeg"],
+    "Colletidae" : ["Bug/Colletidae-1.jpeg","Bug/Colletidae-2.jpeg","Bug/Colletidae-3.jpeg","Bug/Colletidae-4.jpeg","Bug/Colletidae-5.jpeg","Bug/Colletidae-6.jpeg","Bug/Colletidae-7.jpeg","Bug/Colletidae-8.jpeg","Bug/Colletidae-9.jpeg","Bug/Colletidae-0.jpeg"],
+    "Halictidae" : ["Bug/Halictidae-1.jpeg","Bug/Halictidae-2.jpeg","Bug/Halictidae-3.jpeg","Bug/Halictidae-4.jpeg","Bug/Halictidae-5.jpeg","Bug/Halictidae-6.jpeg","Bug/Halictidae-7.jpeg","Bug/Halictidae-8.jpeg","Bug/Halictidae-9.jpeg","Bug/Halictidae-0.jpeg"]
+}
+
+@bot.event
+async def on_ready():
+    print("Entomology ID Bot is working!")
+    update_status.start()
+
+@tasks.loop(seconds=5)  # Check every 5 seconds
+async def update_status():
+    user_id = 1156385983781154817  # Replace with the actual user ID
+    member = None
+
+    for guild in bot.guilds:
+        member = guild.get_member(user_id)
+        if member:
+            break
+
+    if not member:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Nothing"))
+        return
+
+    for activity in member.activities:
+        if isinstance(activity, discord.Spotify):
+            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{activity.title} by {activity.artist}"))
+            return
+
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Nothing"))
+
+@bot.command()
+async def buggie(ctx):
+    await ctx.send("# Buggie Manual:\nTo ask for an image, type b.i \nTo answer, type b.a [insert answer here] \nTo skip, type b.s. Remember to capitalize and spell your answers correctly \nTo get a new image of the insect, use b.p \nTo ask for a hint, use b.h and specify if you want the number of letters, the first letter, or the last letter\nHave fun! \n")
+@bot.command()
+async def h(ctx, hint):
+    if hint == "counts":
+        countsBug = len(CorrectBug[ctx.author.id])
+        await ctx.send(f"The number of letters is **{countsBug}**.")
+    elif hint == "first":
+        firstletterBug = CorrectBug[ctx.author.id][0]
+        await ctx.send(f"The first letter is **{firstletterBug}**.")
+    elif hint == "last":
+        lastletterBug = CorrectBug[ctx.author.id][-1]
+        await ctx.send(f"The last letter is **{lastletterBug}**.")
+    else:
+        await ctx.send("Invalid hint. Please use 'counts', 'first', or 'last'.")
+@bot.command()
+async def i(ctx):
+    global randomImage
+    randomBug, randomImage = random.choice(list(Bug.items()))
+    CorrectBug[ctx.author.id] = randomBug.lower()
+    await ctx.send("**Here is your image:**")
+    await ctx.send(file=discord.File(random.choice(randomImage)))
+@bot.command()
+async def p(ctx):
+    global randomImage
+    await ctx.send("**Sure, here is another image:**")
+    await ctx.send(file=discord.File(random.choice(randomImage)))
+@bot.command()
+async def a(ctx, answer):
+    if ctx.author.id in CorrectBug:
+        correct_answerBug = CorrectBug[ctx.author.id]
+        if answer == correct_answerBug and correct_answerBug != "Aeschnidae":
+            await ctx.send(f"Correct! The answer was **{correct_answerBug}**! Here is the link to the bug: https://en.wikipedia.org/wiki/{correct_answerBug}")
+        elif answer == correct_answerBug and correct_answerBug == "aeschnidae":
+            await ctx.send(f"Correct! The answer was **{correct_answerBug}**! Here is the link to the bug: https://en.wikipedia.org/wiki/Aeshnidae")
+        elif answer != correct_answerBug and correct_answerBug != "aeschnidae":
+            await ctx.send(f"Incorrect. The answer was **{correct_answerBug}**. Here is the link to the bug: https://en.wikipedia.org/wiki/{correct_answerBug}")
+        elif answer != correct_answerBug and correct_answerBug == "aeschnidae":
+            await ctx.send(f"Incorrect! The answer was **{correct_answerBug}**! Here is the link to the bug: https://en.wikipedia.org/wiki/Aeshnidae")
+        del CorrectBug[ctx.author.id]  
+    else:
+        await ctx.send("You have not asked for an image yet.")
+@bot.command()
+async def s(ctx):
+    AnswerBug = CorrectBug[ctx.author.id]
+    if AnswerBug != "Aeschnidae":
+        await ctx.send(f"Skipped! The answer was **{AnswerBug}**. Here is the link to the bug: https://en.wikipedia.org/wiki/{AnswerBug}")
+    else:
+        await ctx.send(f"Skipped! The answer was **{AnswerBug}**! Here is the link to the bug: https://en.wikipedia.org/wiki/Aeshnidae")
+    del CorrectBug[ctx.author.id]
+
+
+
+
+bot.run(BOT_TOKEN)
