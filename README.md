@@ -1,4 +1,4 @@
-# ENTO ID BOT
+# Ento ID Bot
 
 This is a bot created to identify different bugs for the Science Olympiad Event, Entomology.
 It consists of picture identification of different bugs where when you run an image command, it outputs an image and you have to identify what bug it is.
