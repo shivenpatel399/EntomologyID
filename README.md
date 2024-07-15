@@ -17,7 +17,7 @@ To ask for a hint, use b.h and specify if you want the number of letters, the fi
 
 ## Inviting
 
-Invite the bot through this URL: https://rb.gy/5096l8
+Invite the bot through this URL: https://rb.gy/8fdb7z
 
 ## Turning On the Bot
 
