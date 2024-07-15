@@ -19,5 +19,9 @@ Invite the bot through this URL: https://rb.gy/5096l8
 
 DM @shivpat._. on discord if you want me to turn on the bot. It will take about 1-2 minutes to turn it on.
 
+# Privacy and Security
+
+In the main.py code, our code will show about 5-7 lines. Due to the Security Protocol, I am not allowed to reveal the token used for the bot. However, I have attached a file of my code **WITHOUT** the token for public view.
+
 
 # Have Fun!
