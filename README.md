@@ -30,7 +30,7 @@ In the main.py code, the code will show about 5-7 lines. Due to the Security Pro
 ## Some of my other creations
 
 Here is a list of my other bots that I have created:
-**AstroID:** :
-**EpidemicBot** : 
+**AstroID:** : https://github.com/shivenpatel399/AstroID
+**EpidemicBot** : https://github.com/shivenpatel399/EpidemicBot
 
 ## Have Fun!
