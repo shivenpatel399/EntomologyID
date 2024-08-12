@@ -15,14 +15,6 @@ To get a new image of the insect, use b.p
 To ask for a hint, use b.h and specify if you want the number of letters, the first letter, or the last letter
 
 
-## Inviting
-
-Invite the bot through this URL: https://rb.gy/8fdb7z
-
-## Turning On the Bot
-
-DM @shivpat._. on discord if you want me to turn on the bot. It will take about 1-2 minutes to turn it on.
-
 ## Privacy and Security
 
 In the main.py code, the code will show about 5-7 lines. Due to the Security Protocol, I am not allowed to reveal the token used for the bot. However, I have attached a file of my code **WITHOUT** the token for public view.
